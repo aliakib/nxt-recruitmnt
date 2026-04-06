@@ -61,6 +61,38 @@ export function CandidateTable({
     return labels[stage] || stage;
   };
 
+  const [sortedCandidates, setSortedCandidates] = useState<Candidate[]>([]);
+
+  useEffect(() => {
+    if (!sortField) {
+      setSortedCandidates(candidates);
+      return;
+    }
+
+    const sorted = [...candidates].sort((a, b) => {
+      const aValue = a[sortField as keyof Candidate];
+      const bValue = b[sortField as keyof Candidate];
+
+      // Handle strings
+      if (typeof aValue === "string" && typeof bValue === "string") {
+        return sortDirection === "asc"
+          ? aValue.localeCompare(bValue)
+          : bValue.localeCompare(aValue);
+      }
+
+      // Handle numbers
+      if (typeof aValue === "number" && typeof bValue === "number") {
+        return sortDirection === "asc"
+          ? aValue - bValue
+          : bValue - aValue;
+      }
+
+      return 0; // fallback (important)
+    });
+
+    setSortedCandidates(sorted);
+  }, [sortField, sortDirection, candidates]);
+
   return (
     <div className="bg-white rounded-xl border border-border overflow-hidden">
       <AddContentButton text='Candidate' routeTo='/candidates/add' />
@@ -102,7 +134,7 @@ export function CandidateTable({
             </tr>
           </thead>
           <tbody>
-            {candidates.map((candidate, index) => (
+            {sortedCandidates.map((candidate, index) => (
               <tr
                 key={candidate.id}
                 onClick={() => onCandidateClick(candidate)}
@@ -196,8 +228,8 @@ export function CandidateTable({
                 key={page}
                 onClick={() => onPageChange(page)}
                 className={`px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-sm whitespace-nowrap transition-colors ${currentPage === page
-                    ? "bg-primary text-primary-foreground"
-                    : "border border-border hover:bg-gray-50"
+                  ? "bg-primary text-primary-foreground"
+                  : "border border-border hover:bg-gray-50"
                   }`}
               >
                 {page}
