@@ -18,6 +18,7 @@ import mockCandidates from "@/data/mockCandidates";
 
 // constants
 import { ITEMS_PER_PAGE } from "@/constants";
+import sleep from "@/utils/sleep";
 
 export default function Homepage() {
     const [searchValue, setSearchValue] = useState('');
@@ -28,12 +29,8 @@ export default function Homepage() {
     });
     const [candidates, setCandidates] = useState<Candidate[]>(mockCandidates);
     const [selectedCandidate, setSelectedCandidate] = useState<Candidate | null>(null);
-    const [isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
     const [showEmptyState, setShowEmptyState] = useState(true);
-
-    useEffect(() => {
-        setTimeout(() => setIsLoading(false), 1500);
-    }, []);
 
     const filteredCandidates = candidates.filter((candidate) => {
         const matchesSearch = candidate.name.toLowerCase().includes(searchValue.toLowerCase()) ||
@@ -63,18 +60,23 @@ export default function Homepage() {
         setFilters({ stage: '', experience: '', minMatchScore: 0 });
     };
 
+    const seedData = async () => {
+        setIsLoading(true);
+        setShowEmptyState(false);
+        await sleep(2000); // simulate loading delay
+        setIsLoading(false);
+    }
+
     if (isLoading) {
         return <LoadingState />;
     }
 
     if (showEmptyState) {
         return (
-            <>
-                <EmptyState
-                    type="no-candidates"
-                    onAction={() => setShowEmptyState(false)}
-                />
-            </>
+            <EmptyState
+                type="no-candidates"
+                onAction={seedData}
+            />
         );
     }
 

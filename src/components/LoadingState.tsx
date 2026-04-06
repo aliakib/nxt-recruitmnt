@@ -1,12 +1,14 @@
 export function LoadingState() {
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-3 gap-6">
+      <div className="grid sm:grid-cols-1 md:grid-cols-3 gap-4">
         {[1, 2, 3].map((i) => (
-          <div key={i} className="bg-white rounded-xl border border-border p-6 animate-pulse">
-            <div className="w-12 h-12 bg-gray-200 rounded-lg mb-4"></div>
-            <div className="h-6 bg-gray-200 rounded w-3/4 mb-2"></div>
-            <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+          <div key={i} className="bg-white rounded-xl border border-border p-6 animate-pulse flex gap-4 flex-row">
+            <div className="w-14 h-14 bg-gray-200 rounded-lg"></div>
+            <div className="w-full">
+              <div className="h-6 bg-gray-200 rounded w-3/4 mb-2"></div>
+              <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+            </div>
           </div>
         ))}
       </div>
