@@ -27,7 +27,7 @@ export function CandidateDrawer({ candidate, onClose, onStageChange }: Candidate
         className="fixed inset-0 bg-black/50 z-40"
         onClick={onClose}
       ></div>
-      <div className="fixed right-0 top-0 h-full w-[480px] bg-white shadow-2xl z-50 overflow-y-auto">
+      <div className="fixed right-0 top-0 h-full sm:w-full md:w-[480px] lg:w-[480px] bg-white shadow-2xl z-50 overflow-y-auto">
         <div className="sticky top-0 bg-white border-b border-border px-6 py-4 flex items-center justify-between">
           <h2 className="font-semibold">Candidate Details</h2>
           <button

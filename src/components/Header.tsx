@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from 'react';
-import { Search, Bell, ChevronRight } from 'lucide-react';
+import { Search, Bell, ChevronRight, Menu } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 
 // types
@@ -15,6 +15,7 @@ import ProfileDrawer from './drawers/ProfileDrawer';
 import getPageTitle from '@/utils/getPageTitle';
 import getBreadcrumbs from '@/utils/getBreadCrumbs';
 import { getInitials } from '@/utils/getInitials';
+import MobileSidebar from './MobileSidebar';
 
 const UserDetails: User = {
   name: "Sarah Johnson",
@@ -29,6 +30,7 @@ export function Header() {
   const breadcrumbs = getBreadcrumbs(pathname);
   const title = getPageTitle(path);
 
+  const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
   const [notificationDrawerOpen, setNotificationDrawerOpen] = useState<boolean>(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState<boolean>(false);
 
@@ -50,9 +52,17 @@ export function Header() {
 
 
   return (
-    <header className="bg-white border-b border-border px-8 pt-4 pb-2">
+    <header className="bg-white border-b border-border px-4 md:px-6 lg:px-8 pt-4 pb-2">
       <div className="flex items-center justify-between mb-2">
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+        {/* Mobile menu */}
+        <button
+          className="lg:hidden"
+          onClick={() => setSidebarOpen(true)}
+        >
+          <Menu className="w-5 h-5" />
+        </button>
+
+        <div className="hidden lg:flex items-center gap-2 text-sm text-muted-foreground">
           {breadcrumbs.map((crumb, index) => (
             <div key={index} className="flex items-center gap-2">
               <span className={index === breadcrumbs.length - 1 ? 'text-foreground' : ''}>
@@ -62,8 +72,11 @@ export function Header() {
             </div>
           ))}
         </div>
+        <h2 className="hidden lg:hidden sm:block text-xl font-semibold text-foreground">{title}</h2>
         <div className="flex items-center gap-4">
-          <div className="relative">
+
+          {/* Search */}
+          <div className="hidden md:block relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <input
               type="text"
@@ -86,11 +99,12 @@ export function Header() {
           </button>
         </div>
       </div>
-      <h2 className="text-xl font-semibold text-foreground">{title}</h2>
+      <h2 className="hidden lg:block text-xl font-semibold text-foreground">{title}</h2>
 
       {/** notifications drawer */}
       <NotificationsDrawer isOpen={notificationDrawerOpen} onClose={() => setNotificationDrawerOpen(false)} />
       <ProfileDrawer isOpen={profileDropdownOpen} onClose={() => setProfileDropdownOpen(false)} user={UserDetails} />
+      <MobileSidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
     </header>
   );
 }

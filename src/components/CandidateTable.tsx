@@ -165,37 +165,53 @@ export function CandidateTable({
           </tbody>
         </table>
       </div>
-      <div className="px-6 py-4 border-t border-border flex items-center justify-between">
-        <div className="text-sm text-muted-foreground">
+
+      <div className="px-4 sm:px-6 py-4 border-t border-border flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+
+        {/* Left: Info */}
+        <div className="text-sm text-muted-foreground text-center md:text-left">
           Showing {(currentPage - 1) * ITEMS_PER_PAGE + 1} to{" "}
           {Math.min(currentPage * ITEMS_PER_PAGE, totalItems)} of {totalItems}
         </div>
-        <div className="flex items-center gap-2">
+
+        {/* Right: Pagination */}
+        <div className="flex flex-wrap items-center justify-center md:justify-end gap-2">
+
+          {/* Previous */}
           <button
             onClick={() => onPageChange(Math.max(currentPage - 1, 1))}
-            disabled={pagination?.currentPage === 1}
-            className="px-4 py-2 border border-border rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50"
+            disabled={currentPage === 1}
+            className="px-3 sm:px-4 py-2 border border-border rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50 text-sm"
           >
             Previous
           </button>
 
-          {Array.from({ length: pagination?.totalPages || ITEMS_PER_PAGE }, (_, i) => i + 1).map((page) => (
-            <button
-              key={page}
-              onClick={() => pagination?.onPageChange(page)}
-              className={`px-4 py-2 rounded-lg transition-colors ${currentPage === page
-                ? "bg-primary text-primary-foreground"
-                : "border border-border hover:bg-gray-50"
-                }`}
-            >
-              {page}
-            </button>
-          ))}
+          {/* Page Numbers */}
+          <div className="flex items-center gap-1 overflow-x-auto max-w-full">
+            {Array.from(
+              { length: pagination?.totalPages || totalPages },
+              (_, i) => i + 1
+            ).map((page) => (
+              <button
+                key={page}
+                onClick={() => onPageChange(page)}
+                className={`px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-sm whitespace-nowrap transition-colors ${currentPage === page
+                    ? "bg-primary text-primary-foreground"
+                    : "border border-border hover:bg-gray-50"
+                  }`}
+              >
+                {page}
+              </button>
+            ))}
+          </div>
 
+          {/* Next */}
           <button
-            onClick={() => onPageChange(Math.min(currentPage + 1, totalPages || ITEMS_PER_PAGE))}
-            disabled={currentPage === pagination?.totalPages}
-            className="px-4 py-2 border border-border rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50"
+            onClick={() =>
+              onPageChange(Math.min(currentPage + 1, totalPages))
+            }
+            disabled={currentPage === totalPages}
+            className="px-3 sm:px-4 py-2 border border-border rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50 text-sm"
           >
             Next
           </button>
